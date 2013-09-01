@@ -103,7 +103,7 @@
     <cdh.version>4.3.0</cdh.version>
 
     <!-- Library versions -->
-    <vers.avro>1.7.4</vers.avro>
+    <vers.avro>1.7.5</vers.avro>
     <vers.commons-codec>1.4</vers.commons-codec>
     <vers.commons-io>2.1</vers.commons-io>
     <vers.crunch-base>0.7.0</vers.crunch-base>
@@ -691,7 +691,16 @@
         <groupId>org.apache.tika</groupId>
         <artifactId>tika-xmp</artifactId>
         <version>${vers.tika}</version>
-        <scope>test</scope>
+        <exclusions>
+          <exclusion>
+            <groupId>org.apache.geronimo.specs</groupId>
+            <artifactId>geronimo-stax-api_1.0_spec</artifactId> <!-- needed by tika-parsers but already provided by JDK -->
+          </exclusion>
+          <exclusion>
+            <groupId>xerces</groupId>
+            <artifactId>xercesImpl</artifactId> <!-- used by com.drewnoakes:metadata-extractor:jar but replacing built-in XML parser with legacy xerces is scary and we don't need it -->
+          </exclusion>
+        </exclusions>
       </dependency>
       <dependency>
         <groupId>org.apache.tika</groupId>

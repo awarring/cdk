@@ -41,6 +41,7 @@ import com.cloudera.cdk.morphline.shaded.com.google.common.reflect.ClassPath;
 import com.cloudera.cdk.morphline.shaded.com.google.common.reflect.ClassPath.ResourceInfo;
 import com.codahale.metrics.Meter;
 import com.google.common.base.Charsets;
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
 import com.google.common.io.Files;
@@ -52,12 +53,20 @@ import com.typesafe.config.ConfigUtil;
 public class MorphlineTest extends AbstractMorphlineTest {
   
   private void processAndVerifySuccess(Record input, Record expected) {
+    processAndVerifySuccess(input, expected, true);
+  }
+
+  private void processAndVerifySuccess(Record input, Record expected, boolean isSame) {
     collector.reset();
     startSession();
     assertEquals(1, collector.getNumStartEvents());
     assertTrue(morphline.process(input));
     assertEquals(expected, collector.getFirstRecord());
-    assertSame(input, collector.getFirstRecord());    
+    if (isSame) {
+      assertSame(input, collector.getFirstRecord());    
+    } else {
+      assertNotSame(input, collector.getFirstRecord());    
+    }
   }
 
   private void processAndVerifySuccess(Record input, Multimap... expectedMaps) {
@@ -234,6 +243,21 @@ public class MorphlineTest extends AbstractMorphlineTest {
   }
 
   @Test
+  public void testToByteArray() throws Exception {
+    morphline = createMorphline("test-morphlines/toByteArray");    
+    Record record = new Record();
+    record.put("first_name", "Nadja");    
+    collector.reset();
+    startSession();
+    assertEquals(1, collector.getNumStartEvents());
+    assertTrue(morphline.process(record));
+    assertEquals(1, collector.getFirstRecord().getFields().size());
+    byte[] expected = "Nadja".getBytes("UTF-8");
+    assertArrayEquals(expected, (byte[]) collector.getFirstRecord().getFirstValue("first_name"));
+    assertSame(record, collector.getFirstRecord());    
+  }
+
+  @Test
   public void testToString() throws Exception {
     morphline = createMorphline("test-morphlines/toString");    
     Record record = new Record();
@@ -272,6 +296,7 @@ public class MorphlineTest extends AbstractMorphlineTest {
     expected.put("foo", "\r");
     expected.put("foo", "\\.");    
     expected.put("foo", String.valueOf((char)1));    
+    expected.put("foo", "byte[]");    
     processAndVerifySuccess(record, expected);
   }
 
@@ -906,6 +931,30 @@ public class MorphlineTest extends AbstractMorphlineTest {
   }
   
   @Test
+  public void testGrokEmail() throws Exception {
+    morphline = createMorphline("test-morphlines/grokEmail");
+    Record record = new Record();
+    byte[] bytes = Files.toByteArray(new File(RESOURCES_DIR + "/test-documents/email.txt"));
+    record.put(Fields.ATTACHMENT_BODY, bytes);
+    assertTrue(morphline.process(record));
+    Record expected = new Record();
+    String msg = new String(bytes, "UTF-8"); //.replaceAll("(\r)?\n", "\n");
+    expected.put(Fields.MESSAGE, msg);
+    expected.put("message_id", "12345.6789.JavaMail.foo@bar");
+    expected.put("date", "Wed, 6 Feb 2012 06:06:05 -0800");
+    expected.put("from", "foo@bar.com");
+    expected.put("to", "baz@bazoo.com");
+    expected.put("subject", "WEDNESDAY WEATHER HEADLINES");
+    expected.put("from_names", "Foo Bar <foo@bar.com>@xxx");
+    expected.put("to_names", "'Weather News Distribution' <wfoo@bar.com>");    
+    expected.put("text", 
+        "Average 1 to 3- degrees above normal: Mid-Atlantic, Southern Plains.." +
+    		"\nAverage 4 to 6-degrees above normal: Ohio Valley, Rockies, Central Plains");
+    assertEquals(expected, collector.getFirstRecord());
+    assertNotSame(record, collector.getFirstRecord());      
+  }
+  
+  @Test
   public void testConvertTimestamp() throws Exception {
     morphline = createMorphline("test-morphlines/convertTimestamp");    
     Record record = new Record();
@@ -1015,6 +1064,23 @@ public class MorphlineTest extends AbstractMorphlineTest {
   }
   
   @Test
+  public void testSplitWithEdgeCases() throws Exception {
+    morphline = createMorphline("test-morphlines/splitWithEdgeCases");    
+    Record record = new Record();
+    String msg = ",, _a ,_b_ ,,";
+    record.put(Fields.MESSAGE, msg);
+    Record expected = new Record();
+    expected.put(Fields.MESSAGE, msg);
+    expected.put("output", "");
+    expected.put("output", "");
+    expected.put("output", "_a");
+    expected.put("output", "_b_");
+    expected.put("output", "");
+    expected.put("output", "");
+    processAndVerifySuccess(record, expected);
+  }
+  
+  @Test
   public void testSplitWithGrok() throws Exception {
     morphline = createMorphline("test-morphlines/splitWithGrok");    
     Record record = new Record();
@@ -1026,6 +1092,52 @@ public class MorphlineTest extends AbstractMorphlineTest {
     expected.put("output", "_b_");
     expected.put("output", "c__");
     processAndVerifySuccess(record, expected);
+  }
+  
+  @Test
+  public void testSplitWithOutputFields() throws Exception {
+    morphline = createMorphline("test-morphlines/splitWithOutputFields");    
+    Record record = new Record();
+    String msg = " _a ,_b_ , ,c__,d";
+    record.put(Fields.MESSAGE, msg);
+    Record expected = new Record();
+    expected.put(Fields.MESSAGE, msg);
+    expected.put("col0", "_a");
+    expected.put("col2", "c__");
+    processAndVerifySuccess(record, expected);
+  }
+  
+  @Test
+  public void testSplitKeyValue() throws Exception {
+    morphline = createMorphline("test-morphlines/splitKeyValue");    
+    Record record = new Record();
+    record.put("params", "foo=x");
+    record.put("params", " foo = y ");
+    record.put("params", "foo ");
+    record.put("params", "fragment=z");
+    Record expected = new Record();
+    expected.getFields().putAll("params", record.get("params"));
+    expected.put("/foo", "x");
+    expected.put("/foo", "y");
+    expected.put("/fragment", "z");
+    processAndVerifySuccess(record, expected);
+  }
+  
+  @Test
+  public void testSplitKeyValueWithIPTables() throws Exception {
+    morphline = createMorphline("test-morphlines/splitKeyValueWithIPTables");    
+    Record record = new Record();
+    String msg = "Feb  6 12:04:42 IN=eth1 OUT=eth0 SRC=1.2.3.4 DST=6.7.8.9 ACK DF WINDOW=0";
+    record.put(Fields.ATTACHMENT_BODY, msg.getBytes("UTF-8"));
+    Record expected = new Record();
+    expected.put(Fields.MESSAGE, msg);
+    expected.put("timestamp", "Feb  6 12:04:42");
+    expected.put("IN", "eth1");
+    expected.put("OUT", "eth0");
+    expected.put("SRC", "1.2.3.4");
+    expected.put("DST", "6.7.8.9");
+    expected.put("WINDOW", "0");
+    processAndVerifySuccess(record, expected, false);
   }
   
   @Test
@@ -1177,6 +1289,40 @@ public class MorphlineTest extends AbstractMorphlineTest {
   }
   
   @Test
+  public void testExtractURIComponent() throws Exception {
+    String uriStr = "http://user-info@www.fool.com:8080/errors.log?foo=x&foo=y&foo=z#fragment";
+    URI uri = new URI(uriStr);
+    testExtractURIComponent2(uriStr, "scheme", uri.getScheme());
+    testExtractURIComponent2(uriStr, "authority", uri.getAuthority());
+    testExtractURIComponent2(uriStr, "path", uri.getPath());
+    testExtractURIComponent2(uriStr, "query", uri.getQuery());
+    testExtractURIComponent2(uriStr, "fragment", uri.getFragment());
+    testExtractURIComponent2(uriStr, "host", uri.getHost());
+    testExtractURIComponent2(uriStr, "port", uri.getPort());
+    testExtractURIComponent2(uriStr, "schemeSpecificPart", uri.getSchemeSpecificPart());
+    testExtractURIComponent2(uriStr, "userInfo", uri.getUserInfo());
+    try {
+      testExtractURIComponent2(uriStr, "illegalType", uri.getUserInfo());
+      fail();
+    } catch (MorphlineCompilationException e) {
+      ; // expected
+    }
+  }
+  
+  private void testExtractURIComponent2(String uriStr, String component, Object expectedComponent) throws Exception {
+    morphline = createMorphline(
+        "test-morphlines/extractURIComponent", 
+        ConfigFactory.parseMap(ImmutableMap.of("component", component)));
+    
+    Record record = new Record();
+    record.put("uri", uriStr);        
+    Record expected = new Record();
+    expected.put("uri", uriStr);
+    expected.put("output", expectedComponent);
+    processAndVerifySuccess(record, expected);
+  }
+  
+  @Test
   public void testExtractURIQueryParameters() throws Exception {
     String host = "http://www.fool.com/errors.log";
     internalExtractURIQueryParams("foo", host + "?foo=x&foo=y&foo=z", Arrays.asList("x", "y", "z"));
@@ -1272,5 +1418,34 @@ public class MorphlineTest extends AbstractMorphlineTest {
     record.put("tags", "three");
     return record;
   }
+
+  @Test
+  @Ignore
+  public void benchmark() throws Exception {
+    //String morphlineConfigFile = "test-morphlines/grokEmail";
+    String morphlineConfigFile = "test-morphlines/grokSyslogNgCisco";
+    long durationSecs = 20;
+    File file = new File(RESOURCES_DIR + "/test-documents/email.txt");
+    String msg = "<179>Jun 10 04:42:51 www.foo.com Jun 10 2013 04:42:51 : %myproduct-3-mysubfacility-251010: " +
+        "Health probe failed for server 1.2.3.4 on port 8083, connection refused by server";
+    System.out.println("Now benchmarking " + morphlineConfigFile + " ...");
+    morphline = createMorphline(morphlineConfigFile);    
+    byte[] bytes = Files.toByteArray(file);
+    long start = System.currentTimeMillis();
+    long duration = durationSecs * 1000;
+    int iters = 0; 
+    while (System.currentTimeMillis() < start + duration) {
+      Record record = new Record();
+      //record.put(Fields.ATTACHMENT_BODY, bytes);      
+      record.put(Fields.MESSAGE, msg);      
+      collector.reset();
+      startSession();
+      assertEquals(1, collector.getNumStartEvents());
+      assertTrue(morphline.process(record));    
+      iters++;
+    }
+    float secs = (System.currentTimeMillis() - start) / 1000.0f;
+    System.out.println("Results: iters=" + iters + ", took[secs]=" + secs + ", iters/secs=" + (iters/secs));
+  }  
 
 }
