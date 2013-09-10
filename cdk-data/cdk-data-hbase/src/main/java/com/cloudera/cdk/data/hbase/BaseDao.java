@@ -1,6 +1,12 @@
 // (c) Copyright 2011-2013 Cloudera, Inc.
 package com.cloudera.cdk.data.hbase;
 
+import com.cloudera.cdk.data.dao.Dao;
+import com.cloudera.cdk.data.dao.EntityBatch;
+import com.cloudera.cdk.data.dao.EntityScanner;
+import com.cloudera.cdk.data.dao.EntitySchema;
+import com.cloudera.cdk.data.dao.KeySchema;
+import com.cloudera.cdk.data.dao.PartialKey;
 import org.apache.hadoop.hbase.client.HTablePool;
 
 /**
@@ -87,28 +93,12 @@ public class BaseDao<K, E> implements Dao<K, E> {
   }
 
   @Override
-  public EntityScanner<K, E> getScanner(K startKey, K stopKey,
-      ScanModifier scanModifier) {
-    return clientTemplate.getScannerBuilder(entityMapper).setStartKey(startKey)
-        .setStopKey(stopKey).addScanModifier(scanModifier).build();
-  }
-
-  @Override
   public EntityScanner<K, E> getScanner(PartialKey<K> startKey,
       PartialKey<K> stopKey) {
     return clientTemplate.getScannerBuilder(entityMapper)
         .setPartialStartKey(startKey).setPartialStopKey(stopKey).build();
   }
 
-  @Override
-  public EntityScanner<K, E> getScanner(PartialKey<K> startKey,
-      PartialKey<K> stopKey, ScanModifier scanModifier) {
-    return clientTemplate.getScannerBuilder(entityMapper)
-        .setPartialStartKey(startKey).setPartialStopKey(stopKey)
-        .addScanModifier(scanModifier).build();
-  }
-
-  @Override
   public EntityScannerBuilder<K, E> getScannerBuilder() {
     return clientTemplate.getScannerBuilder(entityMapper);
   }
@@ -143,17 +133,29 @@ public class BaseDao<K, E> implements Dao<K, E> {
     return entityMapper.getEntitySchema();
   }
 
-  @Override
+  /**
+   * Gets the key serde for this DAO
+   *
+   * @return The KeySerDe
+   */
   public KeySerDe<K> getKeySerDe() {
     return entityMapper.getKeySerDe();
   }
 
-  @Override
+  /**
+   * Gets the entity serde for this DAO
+   *
+   * @return The EntitySerDe
+   */
   public EntitySerDe<E> getEntitySerDe() {
     return entityMapper.getEntitySerDe();
   }
 
-  @Override
+  /**
+   * Gets the EntityMapper for this DAO.
+   *
+   * @return EntityMapper
+   */
   public EntityMapper<K, E> getEntityMapper() {
     return this.entityMapper;
   }

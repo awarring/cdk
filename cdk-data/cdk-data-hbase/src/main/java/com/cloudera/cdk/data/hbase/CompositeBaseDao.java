@@ -1,6 +1,12 @@
 // (c) Copyright 2011-2013 Cloudera, Inc.
 package com.cloudera.cdk.data.hbase;
 
+import com.cloudera.cdk.data.dao.EntityBatch;
+import com.cloudera.cdk.data.dao.EntityScanner;
+import com.cloudera.cdk.data.dao.EntitySchema;
+import com.cloudera.cdk.data.dao.KeyEntity;
+import com.cloudera.cdk.data.dao.KeySchema;
+import com.cloudera.cdk.data.dao.PartialKey;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -10,7 +16,7 @@ import org.apache.hadoop.hbase.client.HTablePool;
 import org.apache.hadoop.hbase.client.Increment;
 import org.apache.hadoop.hbase.client.Result;
 
-import com.cloudera.cdk.data.hbase.EntitySchema.FieldMapping;
+import com.cloudera.cdk.data.dao.EntitySchema.FieldMapping;
 
 /**
  * Base implementation of the CompositeDao interface. Internally managed
@@ -195,23 +201,6 @@ public abstract class CompositeBaseDao<K, E, S> implements
   }
 
   @Override
-  public EntityScanner<K, E> getScanner(K startKey, K stopKey,
-      ScanModifier scanModifier) {
-    return baseDao.getScanner(startKey, stopKey, scanModifier);
-  }
-
-  @Override
-  public EntityScanner<K, E> getScanner(PartialKey<K> startKey,
-      PartialKey<K> stopKey, ScanModifier scanModifier) {
-    return baseDao.getScanner(startKey, stopKey, scanModifier);
-  }
-
-  @Override
-  public EntityScannerBuilder<K, E> getScannerBuilder() {
-    return baseDao.getScannerBuilder();
-  }
-
-  @Override
   public KeySchema getKeySchema() {
     return baseDao.getKeySchema();
   }
@@ -219,16 +208,6 @@ public abstract class CompositeBaseDao<K, E, S> implements
   @Override
   public EntitySchema getEntitySchema() {
     return baseDao.getEntitySchema();
-  }
-
-  @Override
-  public KeySerDe<K> getKeySerDe() {
-    return baseDao.getKeySerDe();
-  }
-
-  @Override
-  public EntitySerDe<E> getEntitySerDe() {
-    return baseDao.getEntitySerDe();
   }
 
   @Override
@@ -241,7 +220,4 @@ public abstract class CompositeBaseDao<K, E, S> implements
     return baseDao.newBatch();
   }
 
-  public EntityMapper<K, E> getEntityMapper() {
-    return baseDao.getEntityMapper();
-  }
 }

@@ -1,6 +1,9 @@
 // (c) Copyright 2011-2013 Cloudera, Inc.
 package com.cloudera.cdk.data.hbase;
 
+import com.cloudera.cdk.data.dao.EntityScanner;
+import com.cloudera.cdk.data.dao.HBaseClientException;
+import com.cloudera.cdk.data.dao.KeyEntity;
 import java.io.IOException;
 import java.util.Iterator;
 
@@ -10,8 +13,6 @@ import org.apache.hadoop.hbase.client.Result;
 import org.apache.hadoop.hbase.client.ResultScanner;
 import org.apache.hadoop.hbase.client.Scan;
 import org.apache.hadoop.hbase.filter.FilterList;
-
-import com.cloudera.cdk.data.hbase.EntityMapper.KeyEntity;
 
 /**
  * Base EntityScanner implementation. This EntityScanner will use an

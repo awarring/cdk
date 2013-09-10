@@ -5,6 +5,8 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.fail;
 
+import com.cloudera.cdk.data.hbase.avro.impl.AvroKeyEntitySchemaParser;
+import com.cloudera.cdk.data.hbase.avro.impl.AvroUtils;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -24,11 +26,11 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import com.cloudera.cdk.data.hbase.Dao;
-import com.cloudera.cdk.data.hbase.EntityMapper.KeyEntity;
-import com.cloudera.cdk.data.hbase.EntityScanner;
-import com.cloudera.cdk.data.hbase.IncompatibleSchemaException;
-import com.cloudera.cdk.data.hbase.SchemaNotFoundException;
+import com.cloudera.cdk.data.dao.Dao;
+import com.cloudera.cdk.data.dao.KeyEntity;
+import com.cloudera.cdk.data.dao.EntityScanner;
+import com.cloudera.cdk.data.dao.IncompatibleSchemaException;
+import com.cloudera.cdk.data.dao.SchemaNotFoundException;
 import com.cloudera.cdk.data.hbase.avro.entities.ArrayRecord;
 import com.cloudera.cdk.data.hbase.avro.entities.EmbeddedRecord;
 import com.cloudera.cdk.data.hbase.avro.entities.TestEnum;
@@ -37,7 +39,7 @@ import com.cloudera.cdk.data.hbase.avro.entities.TestRecord;
 import com.cloudera.cdk.data.hbase.manager.DefaultSchemaManager;
 import com.cloudera.cdk.data.hbase.manager.ManagedSchema;
 import com.cloudera.cdk.data.hbase.manager.ManagedSchemaKey;
-import com.cloudera.cdk.data.hbase.manager.SchemaManager;
+import com.cloudera.cdk.data.dao.SchemaManager;
 import com.cloudera.cdk.data.hbase.testing.HBaseTestUtils;
 import com.cloudera.cdk.data.hbase.tool.SchemaTool;
 
@@ -544,9 +546,9 @@ public class ManagedDaoTest {
       // This is what we expect
     }
     manager.createSchema(tableName, "test", keyString, testRecord,
-        "com.cloudera.cdk.data.hbase.avro.AvroKeyEntitySchemaParser",
-        "com.cloudera.cdk.data.hbase.avro.AvroKeySerDe",
-        "com.cloudera.cdk.data.hbase.avro.AvroEntitySerDe");
+        "com.cloudera.cdk.data.hbase.avro.impl.AvroKeyEntitySchemaParser",
+        "com.cloudera.cdk.data.hbase.avro.impl.AvroKeySerDe",
+        "com.cloudera.cdk.data.hbase.avro.impl.AvroEntitySerDe");
     assertEquals(
         0,
         manager.getEntityVersion(tableName, "test",
@@ -558,9 +560,9 @@ public class ManagedDaoTest {
     SchemaManager manager = new DefaultSchemaManager(tablePool);
     manager.createSchema(tableName, "TestRecord", keyString,
         goodMigrationRecordAddField,
-        "com.cloudera.cdk.data.hbase.avro.AvroKeyEntitySchemaParser",
-        "com.cloudera.cdk.data.hbase.avro.AvroKeySerDe",
-        "com.cloudera.cdk.data.hbase.avro.AvroEntitySerDe");
+        "com.cloudera.cdk.data.hbase.avro.impl.AvroKeyEntitySchemaParser",
+        "com.cloudera.cdk.data.hbase.avro.impl.AvroKeySerDe",
+        "com.cloudera.cdk.data.hbase.avro.impl.AvroEntitySerDe");
   }
 
   private void badMigration(String badMigration) throws Exception {

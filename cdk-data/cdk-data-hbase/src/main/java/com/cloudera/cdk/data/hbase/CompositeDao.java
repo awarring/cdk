@@ -1,9 +1,9 @@
 // (c) Copyright 2011-2013 Cloudera, Inc.
 package com.cloudera.cdk.data.hbase;
 
+import com.cloudera.cdk.data.dao.Dao;
+import com.cloudera.cdk.data.dao.KeyEntity;
 import java.util.List;
-
-import com.cloudera.cdk.data.hbase.EntityMapper.KeyEntity;
 
 /**
  * The CompositeDao provides an interface for fetching from tables that may have

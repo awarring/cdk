@@ -5,12 +5,11 @@ import org.apache.hadoop.hbase.filter.CompareFilter;
 import org.apache.hadoop.hbase.filter.Filter;
 import org.apache.hadoop.hbase.filter.RegexStringComparator;
 
-import com.cloudera.cdk.data.hbase.Dao;
-import com.cloudera.cdk.data.hbase.EntitySchema;
-import com.cloudera.cdk.data.hbase.EntitySchema.FieldMapping;
+import com.cloudera.cdk.data.dao.EntitySchema;
+import com.cloudera.cdk.data.dao.EntitySchema.FieldMapping;
 import com.cloudera.cdk.data.hbase.EntitySerDe;
-import com.cloudera.cdk.data.hbase.HBaseCommonException;
-import com.cloudera.cdk.data.hbase.MappingType;
+import com.cloudera.cdk.data.dao.HBaseCommonException;
+import com.cloudera.cdk.data.dao.MappingType;
 
 /**
  * An EntityFilter that will perform a regular expression filter on an entity's
@@ -19,12 +18,6 @@ import com.cloudera.cdk.data.hbase.MappingType;
 public class RegexEntityFilter implements EntityFilter {
 
   private final Filter filter;
-
-  public RegexEntityFilter(Dao<?, ?> dao, String fieldName, String regex,
-      boolean isEqual) {
-    this(dao.getEntitySchema(), dao.getEntityMapper().getEntitySerDe(),
-        fieldName, regex, isEqual);
-  }
 
   public RegexEntityFilter(EntitySchema entitySchema,
       EntitySerDe<?> entitySerDe, String fieldName, String regex,

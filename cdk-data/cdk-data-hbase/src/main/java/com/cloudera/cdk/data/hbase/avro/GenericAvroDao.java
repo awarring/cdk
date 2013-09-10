@@ -1,6 +1,14 @@
 // (c) Copyright 2011-2013 Cloudera, Inc.
 package com.cloudera.cdk.data.hbase.avro;
 
+import com.cloudera.cdk.data.hbase.avro.impl.AvroEntityComposer;
+import com.cloudera.cdk.data.hbase.avro.impl.AvroEntitySchema;
+import com.cloudera.cdk.data.hbase.avro.impl.AvroEntitySerDe;
+import com.cloudera.cdk.data.hbase.avro.impl.AvroKeyEntitySchemaParser;
+import com.cloudera.cdk.data.hbase.avro.impl.AvroKeySchema;
+import com.cloudera.cdk.data.hbase.avro.impl.AvroKeySerDe;
+import com.cloudera.cdk.data.hbase.avro.impl.AvroUtils;
+import com.cloudera.cdk.data.hbase.avro.impl.VersionedAvroEntityMapper;
 import java.io.InputStream;
 
 import org.apache.avro.generic.GenericRecord;
@@ -8,7 +16,7 @@ import org.apache.hadoop.hbase.client.HTablePool;
 
 import com.cloudera.cdk.data.hbase.BaseDao;
 import com.cloudera.cdk.data.hbase.BaseEntityMapper;
-import com.cloudera.cdk.data.hbase.manager.SchemaManager;
+import com.cloudera.cdk.data.dao.SchemaManager;
 
 /**
  * A Dao for Avro's GenericRecords. In this Dao implementation, both the

@@ -5,12 +5,11 @@ import org.apache.hadoop.hbase.filter.CompareFilter;
 import org.apache.hadoop.hbase.filter.Filter;
 import org.apache.hadoop.hbase.filter.SingleColumnValueFilter;
 
-import com.cloudera.cdk.data.hbase.Dao;
-import com.cloudera.cdk.data.hbase.EntitySchema;
-import com.cloudera.cdk.data.hbase.EntitySchema.FieldMapping;
+import com.cloudera.cdk.data.dao.EntitySchema;
+import com.cloudera.cdk.data.dao.EntitySchema.FieldMapping;
 import com.cloudera.cdk.data.hbase.EntitySerDe;
-import com.cloudera.cdk.data.hbase.HBaseCommonException;
-import com.cloudera.cdk.data.hbase.MappingType;
+import com.cloudera.cdk.data.dao.HBaseCommonException;
+import com.cloudera.cdk.data.dao.MappingType;
 
 /**
  * An EntityFilter that will perform an equality filter on a single entity
@@ -19,18 +18,6 @@ import com.cloudera.cdk.data.hbase.MappingType;
 public class SingleFieldEntityFilter implements EntityFilter {
 
   private final org.apache.hadoop.hbase.filter.Filter filter;
-
-  public SingleFieldEntityFilter(Dao<?, ?> dao, String fieldName,
-      Object filterValue) {
-    this(dao.getEntitySchema(), dao.getEntityMapper().getEntitySerDe(),
-        fieldName, filterValue, CompareFilter.CompareOp.EQUAL);
-  }
-
-  public SingleFieldEntityFilter(Dao<?, ?> dao, String fieldName,
-      Object filterValue, CompareFilter.CompareOp equalityOperator) {
-    this(dao.getEntitySchema(), dao.getEntityMapper().getEntitySerDe(),
-        fieldName, filterValue, equalityOperator);
-  }
 
   public SingleFieldEntityFilter(EntitySchema entitySchema,
       EntitySerDe<?> entitySerDe, String fieldName, Object filterValue) {

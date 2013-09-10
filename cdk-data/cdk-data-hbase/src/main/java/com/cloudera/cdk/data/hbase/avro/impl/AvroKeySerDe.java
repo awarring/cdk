@@ -1,6 +1,7 @@
 // (c) Copyright 2011-2013 Cloudera, Inc.
-package com.cloudera.cdk.data.hbase.avro;
+package com.cloudera.cdk.data.hbase.avro.impl;
 
+import com.cloudera.cdk.data.hbase.avro.impl.AvroUtils;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
@@ -22,10 +23,10 @@ import org.apache.avro.specific.SpecificDatumWriter;
 
 import com.cloudera.cdk.data.hbase.avro.io.MemcmpDecoder;
 import com.cloudera.cdk.data.hbase.avro.io.MemcmpEncoder;
-import com.cloudera.cdk.data.hbase.KeyBuildException;
+import com.cloudera.cdk.data.dao.KeyBuildException;
 import com.cloudera.cdk.data.hbase.KeySerDe;
-import com.cloudera.cdk.data.hbase.PartialKey;
-import com.cloudera.cdk.data.hbase.PartialKey.KeyPartNameValue;
+import com.cloudera.cdk.data.dao.PartialKey;
+import com.cloudera.cdk.data.dao.PartialKey.KeyPartNameValue;
 
 /**
  * Avro implementation of the KeySerDe interface. This will serialize Keys and

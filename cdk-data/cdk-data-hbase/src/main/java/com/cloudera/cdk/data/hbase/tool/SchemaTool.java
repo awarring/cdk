@@ -35,15 +35,15 @@ import org.codehaus.jackson.JsonParseException;
 import org.codehaus.jackson.JsonParser;
 import org.codehaus.jackson.map.ObjectMapper;
 
-import com.cloudera.cdk.data.hbase.Constants;
-import com.cloudera.cdk.data.hbase.HBaseCommonException;
-import com.cloudera.cdk.data.hbase.KeySchema;
-import com.cloudera.cdk.data.hbase.SchemaValidationException;
-import com.cloudera.cdk.data.hbase.avro.AvroEntitySchema;
-import com.cloudera.cdk.data.hbase.avro.AvroKeyEntitySchemaParser;
-import com.cloudera.cdk.data.hbase.avro.AvroKeySchema;
-import com.cloudera.cdk.data.hbase.avro.AvroUtils;
-import com.cloudera.cdk.data.hbase.manager.SchemaManager;
+import com.cloudera.cdk.data.dao.Constants;
+import com.cloudera.cdk.data.dao.HBaseCommonException;
+import com.cloudera.cdk.data.dao.KeySchema;
+import com.cloudera.cdk.data.dao.SchemaValidationException;
+import com.cloudera.cdk.data.hbase.avro.impl.AvroEntitySchema;
+import com.cloudera.cdk.data.hbase.avro.impl.AvroKeyEntitySchemaParser;
+import com.cloudera.cdk.data.hbase.avro.impl.AvroKeySchema;
+import com.cloudera.cdk.data.hbase.avro.impl.AvroUtils;
+import com.cloudera.cdk.data.dao.SchemaManager;
 
 /**
  * Utility class for managing Managed Schemas in HBase Common.
@@ -242,9 +242,9 @@ public class SchemaTool {
       parser.parseEntity(entitySchemaString).getRequiredColumnFamilies();
       schemaManager.createSchema(tableName, entityName, keySchemaString,
           entitySchemaString,
-          "com.cloudera.cdk.data.hbase.avro.AvroKeyEntitySchemaParser",
-          "com.cloudera.cdk.data.hbase.avro.AvroKeySerDe",
-          "com.cloudera.cdk.data.hbase.avro.AvroEntitySerDe");
+          "com.cloudera.cdk.data.hbase.avro.impl.AvroKeyEntitySchemaParser",
+          "com.cloudera.cdk.data.hbase.avro.impl.AvroKeySerDe",
+          "com.cloudera.cdk.data.hbase.avro.impl.AvroEntitySerDe");
     }
 
     if (createTableAndFamilies) {

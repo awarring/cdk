@@ -19,12 +19,12 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import com.cloudera.cdk.data.hbase.BaseDao;
-import com.cloudera.cdk.data.hbase.Dao;
-import com.cloudera.cdk.data.hbase.EntityMapper.KeyEntity;
-import com.cloudera.cdk.data.hbase.EntityScanner;
+import com.cloudera.cdk.data.dao.Dao;
+import com.cloudera.cdk.data.dao.KeyEntity;
+import com.cloudera.cdk.data.dao.EntityScanner;
 import com.cloudera.cdk.data.hbase.EntityScannerBuilder;
 import com.cloudera.cdk.data.hbase.avro.AvroDaoTest;
-import com.cloudera.cdk.data.hbase.avro.AvroUtils;
+import com.cloudera.cdk.data.hbase.avro.impl.AvroUtils;
 import com.cloudera.cdk.data.hbase.avro.GenericAvroDao;
 import com.cloudera.cdk.data.hbase.testing.HBaseTestUtils;
 

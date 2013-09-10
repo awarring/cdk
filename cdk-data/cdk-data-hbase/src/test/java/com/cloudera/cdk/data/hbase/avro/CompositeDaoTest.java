@@ -5,6 +5,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import com.cloudera.cdk.data.hbase.avro.impl.AvroUtils;
 import java.util.Arrays;
 
 import org.apache.hadoop.hbase.client.HTablePool;
@@ -15,7 +16,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import com.cloudera.cdk.data.hbase.Dao;
+import com.cloudera.cdk.data.dao.Dao;
 import com.cloudera.cdk.data.hbase.avro.entities.CompositeRecord;
 import com.cloudera.cdk.data.hbase.avro.entities.SubRecord1;
 import com.cloudera.cdk.data.hbase.avro.entities.SubRecord2;

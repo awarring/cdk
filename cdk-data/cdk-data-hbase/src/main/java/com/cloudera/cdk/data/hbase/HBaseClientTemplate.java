@@ -1,6 +1,10 @@
 // (c) Copyright 2011-2013 Cloudera, Inc.
 package com.cloudera.cdk.data.hbase;
 
+import com.cloudera.cdk.data.dao.Constants;
+import com.cloudera.cdk.data.dao.EntityBatch;
+import com.cloudera.cdk.data.dao.HBaseClientException;
+import com.cloudera.cdk.data.dao.KeyEntity;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -15,7 +19,6 @@ import org.apache.hadoop.hbase.client.Put;
 import org.apache.hadoop.hbase.client.Result;
 import org.apache.hadoop.hbase.util.Bytes;
 
-import com.cloudera.cdk.data.hbase.EntityMapper.KeyEntity;
 import com.google.common.annotations.VisibleForTesting;
 
 /**

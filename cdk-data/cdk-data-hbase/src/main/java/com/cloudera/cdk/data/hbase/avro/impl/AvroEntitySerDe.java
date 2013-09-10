@@ -1,5 +1,5 @@
 // (c) Copyright 2011-2013 Cloudera, Inc.
-package com.cloudera.cdk.data.hbase.avro;
+package com.cloudera.cdk.data.hbase.avro.impl;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -25,10 +25,10 @@ import org.apache.avro.specific.SpecificDatumWriter;
 import org.apache.avro.util.Utf8;
 
 import com.cloudera.cdk.data.hbase.EntityComposer;
-import com.cloudera.cdk.data.hbase.EntitySchema.FieldMapping;
+import com.cloudera.cdk.data.dao.EntitySchema.FieldMapping;
 import com.cloudera.cdk.data.hbase.EntitySerDe;
-import com.cloudera.cdk.data.hbase.MappingType;
-import com.cloudera.cdk.data.hbase.SchemaValidationException;
+import com.cloudera.cdk.data.dao.MappingType;
+import com.cloudera.cdk.data.dao.SchemaValidationException;
 import com.cloudera.cdk.data.hbase.avro.io.ColumnDecoder;
 import com.cloudera.cdk.data.hbase.avro.io.ColumnEncoder;
 

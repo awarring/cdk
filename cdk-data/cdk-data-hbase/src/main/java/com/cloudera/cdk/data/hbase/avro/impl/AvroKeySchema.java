@@ -1,9 +1,9 @@
 // (c) Copyright 2011-2013 Cloudera, Inc.
-package com.cloudera.cdk.data.hbase.avro;
+package com.cloudera.cdk.data.hbase.avro.impl;
 
 import org.apache.avro.Schema;
 
-import com.cloudera.cdk.data.hbase.KeySchema;
+import com.cloudera.cdk.data.dao.KeySchema;
 
 /**
  * A KeySchema implementation powered by Avro.
