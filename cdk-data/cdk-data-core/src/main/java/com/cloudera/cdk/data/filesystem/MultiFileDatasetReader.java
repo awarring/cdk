@@ -16,9 +16,11 @@
 package com.cloudera.cdk.data.filesystem;
 
 import com.cloudera.cdk.data.DatasetDescriptor;
-import com.cloudera.cdk.data.DatasetDescriptor;
 import com.cloudera.cdk.data.DatasetReader;
+import com.cloudera.cdk.data.Format;
 import com.cloudera.cdk.data.Formats;
+import com.cloudera.cdk.data.UnknownFormatException;
+import com.cloudera.cdk.data.spi.AbstractDatasetReader;
 import com.google.common.base.Objects;
 import com.google.common.base.Preconditions;
 import org.apache.hadoop.fs.FileSystem;
@@ -26,8 +28,9 @@ import org.apache.hadoop.fs.Path;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.NoSuchElementException;
 
-class MultiFileDatasetReader<E> implements DatasetReader<E> {
+class MultiFileDatasetReader<E> extends AbstractDatasetReader<E> {
 
   private final FileSystem fileSystem;
   private final DatasetDescriptor descriptor;
@@ -52,6 +55,11 @@ class MultiFileDatasetReader<E> implements DatasetReader<E> {
     Preconditions.checkState(state.equals(ReaderWriterState.NEW),
       "A reader may not be opened more than once - current state:%s", state);
 
+    final Format format = descriptor.getFormat();
+    if (!(Formats.AVRO.equals(format) || Formats.PARQUET.equals(format))) {
+      throw new UnknownFormatException("Cannot open format:" + format.getName());
+    }
+
     if (filesIter.hasNext()) {
       openNextReader();
     }
@@ -70,7 +78,6 @@ class MultiFileDatasetReader<E> implements DatasetReader<E> {
   }
 
   @Override
-  @edu.umd.cs.findbugs.annotations.SuppressWarnings(value = "UWF_FIELD_NOT_INITIALIZED_IN_CONSTRUCTOR", justification = "Checked by Preconditions")
   public boolean hasNext() {
     Preconditions.checkState(state.equals(ReaderWriterState.OPEN),
       "Attempt to read from a file in state:%s", state);
@@ -94,11 +101,21 @@ class MultiFileDatasetReader<E> implements DatasetReader<E> {
   }
 
   @Override
-  @edu.umd.cs.findbugs.annotations.SuppressWarnings(value = "UWF_FIELD_NOT_INITIALIZED_IN_CONSTRUCTOR", justification = "Checked by Preconditions")
-  public E read() {
+  public E next() {
     Preconditions.checkState(state.equals(ReaderWriterState.OPEN),
       "Attempt to read from a file in state:%s", state);
-    return reader.read();
+    if (reader == null) {
+      // no reader means hasNext would return false
+      throw new NoSuchElementException();
+    }
+    return reader.next();
+  }
+
+  @Override
+  public void remove() {
+    Preconditions.checkState(state.equals(ReaderWriterState.OPEN),
+        "Attempt to remove from a file in state:%s", state);
+    reader.remove();
   }
 
   @Override

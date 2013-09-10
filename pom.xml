@@ -103,7 +103,7 @@
     <cdh.version>4.3.0</cdh.version>
 
     <!-- Library versions -->
-    <vers.avro>1.7.4</vers.avro>
+    <vers.avro>1.7.5</vers.avro>
     <vers.commons-codec>1.4</vers.commons-codec>
     <vers.commons-io>2.1</vers.commons-io>
     <vers.crunch-base>0.7.0</vers.crunch-base>
@@ -113,6 +113,7 @@
     <vers.guava>11.0.2</vers.guava>
     <vers.hadoop>2.0.0-cdh${cdh.version}</vers.hadoop>
     <vers.hadoop-mr1>2.0.0-mr1-cdh${cdh.version}</vers.hadoop-mr1>
+    <vers.hbase>0.94.6-cdh${cdh.version}</vers.hbase>
     <vers.hcatalog>0.5.0-cdh${cdh.version}</vers.hcatalog>
     <vers.jexl>2.1.1</vers.jexl>
     <vers.compress>1.4.1</vers.compress>
@@ -357,6 +358,7 @@
             <excludes>
               <exclude>**/*.avro</exclude>
               <exclude>**/*.avsc</exclude>
+              <exclude>**/*.avdl</exclude>
               <exclude>**/*.iml</exclude>
               <exclude>**/*.log</exclude>
               <exclude>**/*.md</exclude>
@@ -378,6 +380,7 @@
               <exclude>**/cdk/morphline/saxon/XMLInputFactoryCreator.java</exclude> <!-- BSD -->
               <exclude>**/src/test/resources/grok-dictionaries/**</exclude> <!-- ASL 2.0 -->
               <exclude>**/src/test/resources/test-documents/**</exclude> <!-- ASL 2.0 -->
+              <exclude>**/cdk/data/hbase/**</exclude> <!-- TODO: Remove this. Temporary exclude while migrating HBC -->
               <exclude>**/src/site/**/*.confluence</exclude>
             </excludes>
           </configuration>
@@ -593,6 +596,19 @@
         <scope>test</scope>
       </dependency>
       <dependency>
+        <groupId>org.apache.hbase</groupId>
+        <artifactId>hbase</artifactId>
+        <version>${vers.hbase}</version>
+        <scope>provided</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.hbase</groupId>
+        <artifactId>hbase</artifactId>
+        <version>${vers.hbase}</version>
+        <classifier>tests</classifier>
+        <scope>provided</scope>
+      </dependency>      
+      <dependency>
         <groupId>org.apache.hcatalog</groupId>
         <artifactId>hcatalog-core</artifactId>
         <version>${vers.hcatalog}</version>
@@ -675,7 +691,16 @@
         <groupId>org.apache.tika</groupId>
         <artifactId>tika-xmp</artifactId>
         <version>${vers.tika}</version>
-        <scope>test</scope>
+        <exclusions>
+          <exclusion>
+            <groupId>org.apache.geronimo.specs</groupId>
+            <artifactId>geronimo-stax-api_1.0_spec</artifactId> <!-- needed by tika-parsers but already provided by JDK -->
+          </exclusion>
+          <exclusion>
+            <groupId>xerces</groupId>
+            <artifactId>xercesImpl</artifactId> <!-- used by com.drewnoakes:metadata-extractor:jar but replacing built-in XML parser with legacy xerces is scary and we don't need it -->
+          </exclusion>
+        </exclusions>
       </dependency>
       <dependency>
         <groupId>org.apache.tika</groupId>

@@ -168,8 +168,8 @@ public class DetectMimeTypesTest extends AbstractMorphlineTest {
         path + "/testEXCEL.xlsx", "application/x-tika-ooxml", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
         path + "/testEXCEL.xls", "application/vnd.ms-excel", "application/vnd.ms-excel",
         path + "/testPages.pages",  "application/zip", "application/vnd.apple.pages",
-        path + "/testNumbers.numbers", "application/zip", "application/vnd.apple.numbers",
-        path + "/testKeynote.key", "application/zip", "application/vnd.apple.keynote",
+//        path + "/testNumbers.numbers", "application/zip", "application/vnd.apple.numbers",
+//        path + "/testKeynote.key", "application/zip", "application/vnd.apple.keynote",
         
         path + "/testRTFVarious.rtf", "application/rtf", "application/rtf",
         path + "/complex.mbox", "text/plain", "application/mbox",        
@@ -208,7 +208,6 @@ public class DetectMimeTypesTest extends AbstractMorphlineTest {
         
         path + "/testKML.kml",  "application/vnd.google-earth.kml+xml", "application/vnd.google-earth.kml+xml",
         path + "/testRDF.rdf",  "application/rdf+xml", "application/rdf+xml",
-        path + "/testTrueType.ttf",  "application/x-font-ttf", "application/x-font-ttf",
         path + "/testVISIO.vsd",  "application/x-tika-msoffice", "application/vnd.visio",
         path + "/testWAR.war",  "application/zip", "application/x-tika-java-web-archive",
         path + "/testWindows-x86-32.exe",  "application/x-msdownload; format=pe32", "application/x-msdownload; format=pe32",
