@@ -13,28 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.cloudera.cdk.data.dao;
+package com.cloudera.cdk.data;
 
-/**
- * The supported Mapping Types, which control how an entity field maps to
- * columns in an HBase table.
- */
-public enum MappingType {
+public interface DatasetAccessor<E> {
 
-  // Maps a value to a part of the row key
-  KEY,
-  
-  // Maps a value to a single column.
-  COLUMN,
+  public E get(PartitionKey key);
 
-  // Maps a map or record value to columns
-  // in a column family.
-  KEY_AS_COLUMN,
-  
-  // The field will be populated with the
-  // current version of the entity. This
-  // allows the version to be checked if this
-  // same entity is persisted back, to make sure
-  // it hasn't changed.
-  OCC_VERSION
+  public boolean put(E entity);
+
 }

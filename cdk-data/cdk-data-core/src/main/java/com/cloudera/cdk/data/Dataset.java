@@ -126,4 +126,6 @@ public interface Dataset {
    */
   Iterable<Dataset> getPartitions();
 
+  <E> DatasetAccessor<E> newAccessor();
+
 }
