@@ -20,7 +20,7 @@ import com.cloudera.cdk.data.DatasetAccessor;
 import com.cloudera.cdk.data.DatasetDescriptor;
 import com.cloudera.cdk.data.DatasetReader;
 import com.cloudera.cdk.data.DatasetWriter;
-import com.cloudera.cdk.data.PartitionKey;
+import com.cloudera.cdk.data.Marker;
 import com.cloudera.cdk.data.hbase.HBaseDatasetRepository;
 import com.cloudera.cdk.data.hbase.avro.entities.ArrayRecord;
 import com.cloudera.cdk.data.hbase.avro.entities.EmbeddedRecord;
@@ -119,8 +119,9 @@ public class HBaseDatasetRepositoryTest {
     // ensure the new entities are what we expect with get operations
     for (int i = 0; i < 10; ++i) {
       String iStr = Long.toString(i);
-      PartitionKey key = ds.getDescriptor().getPartitionStrategy()
-          .partitionKey("part1_" + iStr, "part2_" + iStr);
+      Marker key = new Marker.Builder()
+          .add("part1", "part1_" + iStr)
+          .add("part2", "part2_" + iStr).get();
       compareEntitiesWithUtf8(i, accessor.get(key));
     }
 
@@ -138,8 +139,26 @@ public class HBaseDatasetRepositoryTest {
       reader.close();
     }
 
-    PartitionKey key = ds.getDescriptor().getPartitionStrategy()
-        .partitionKey("part1_5", "part2_5");
+    // test a partial scan
+    cnt = 3;
+    reader = ds
+        .from(new Marker.Builder().add("part1", "part1_3").add("part2", "part2_3").get())
+        .to(new Marker.Builder().add("part1", "part1_7").add("part2", "part2_7").get())
+        .newReader();
+    reader.open();
+    try {
+      for (GenericRecord entity : reader) {
+        compareEntitiesWithUtf8(cnt, entity);
+        cnt++;
+      }
+      assertEquals(7, cnt);
+    } finally {
+      reader.close();
+    }
+
+    Marker key = new Marker.Builder()
+        .add("part1", "part1_5")
+        .add("part2", "part2_5").get();
 
     // test delete
     accessor.delete(key);
@@ -177,8 +196,9 @@ public class HBaseDatasetRepositoryTest {
     // ensure the new entities are what we expect with get operations
     for (int i = 0; i < 10; ++i) {
       String iStr = Long.toString(i);
-      PartitionKey key = ds.getDescriptor().getPartitionStrategy()
-          .partitionKey("part1_" + iStr, "part2_" + iStr);
+      Marker key = new Marker.Builder()
+          .add("part1", "part1_" + iStr)
+          .add("part2", "part2_" + iStr).get();
       compareEntitiesWithString(i, accessor.get(key));
     }
 
@@ -196,8 +216,9 @@ public class HBaseDatasetRepositoryTest {
       reader.close();
     }
 
-    PartitionKey key = ds.getDescriptor().getPartitionStrategy()
-        .partitionKey("part1_5", "part2_5");
+    Marker key = new Marker.Builder()
+        .add("part1", "part1_5")
+        .add("part2", "part2_5").get();
 
     // test delete
     accessor.delete(key);
@@ -222,8 +243,9 @@ public class HBaseDatasetRepositoryTest {
 
     // Retrieve the entity
     String iStr = Long.toString(0);
-    PartitionKey key = ds.getDescriptor().getPartitionStrategy()
-        .partitionKey("part1_" + iStr, "part2_" + iStr);
+    Marker key = new Marker.Builder()
+        .add("part1", "part1_" + iStr)
+        .add("part2", "part2_" + iStr).get();
     compareEntitiesWithUtf8(0, accessor.get(key));
 
     // delete dataset
