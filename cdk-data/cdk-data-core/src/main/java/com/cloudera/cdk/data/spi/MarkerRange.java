@@ -115,6 +115,14 @@ public class MarkerRange {
         .toString();
   }
 
+  public Boundary getStart() {
+    return start;
+  }
+
+  public Boundary getEnd() {
+    return end;
+  }
+
   /**
    * Placeholder range that can be used when there is no PartitionStrategy.
    *
@@ -171,7 +179,7 @@ public class MarkerRange {
   /**
    * Represents the boundary of a range, either inclusive or exclusive.
    */
-  static class Boundary {
+  public static class Boundary {
 
     public static final Boundary UNBOUNDED = new Boundary();
 
@@ -232,6 +240,14 @@ public class MarkerRange {
       }
     }
 
+    public Marker getBound() {
+      return bound;
+    }
+
+    public boolean isInclusive() {
+      return isInclusive;
+    }
+
     @Override
     public String toString() {
       if (comparator == null) {
@@ -245,5 +261,6 @@ public class MarkerRange {
             .toString();
       }
     }
+
   }
 }
