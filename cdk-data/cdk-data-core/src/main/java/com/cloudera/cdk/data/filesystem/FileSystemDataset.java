@@ -16,7 +16,6 @@
 package com.cloudera.cdk.data.filesystem;
 
 import com.cloudera.cdk.data.Dataset;
-import com.cloudera.cdk.data.DatasetAccessor;
 import com.cloudera.cdk.data.DatasetDescriptor;
 import com.cloudera.cdk.data.DatasetException;
 import com.cloudera.cdk.data.DatasetReader;
@@ -243,11 +242,6 @@ class FileSystemDataset<E> extends AbstractDataset<E> {
     }
 
     return partitions;
-  }
-
-  @Override
-  public DatasetAccessor<E> newAccessor() {
-    throw new UnsupportedOperationException();
   }
 
   @Override

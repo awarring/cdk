@@ -30,11 +30,8 @@ import com.cloudera.cdk.data.dao.HBaseClientException;
 
 /**
  * Base EntityScanner implementation. This EntityScanner will use an
- * EntityMapper while scanning rows in HBase, and will map each row to KeyEntity
- * pairs.
+ * EntityMapper while scanning rows in HBase, and will map each row to an entity
  * 
- * @param <K>
- *          The underlying key record type.
  * @param <E>
  *          The entity type this scanner scans.
  */
@@ -50,16 +47,12 @@ public class BaseEntityScanner<E> implements EntityScanner<E> {
   /**
    * @param scan
    *          The Scan object that will be used
-   * @param transactionManager
-   *          The TransactionManager that will manage transactional entities.
    * @param tablePool
    *          The HTablePool instance to get a table to open a scanner on.
    * @param tableName
    *          The table name to perform the scan on.
    * @param entityMapper
-   *          The EntityMapper to map rows to entities.
-   * @param transactional
-   *          true if this is a transactional scan.
+   *          The EntityMapper to map rows to entities..
    */
   public BaseEntityScanner(Scan scan, HTablePool tablePool, String tableName,
       EntityMapper<E> entityMapper) {
@@ -84,12 +77,18 @@ public class BaseEntityScanner<E> implements EntityScanner<E> {
     if (scanBuilder.getStartKey() != null) {
       byte[] keyBytes = entityMapper.getKeySerDe().serialize(
           scanBuilder.getStartKey());
+      if (!scanBuilder.getStartInclusive()) {
+        keyBytes = addZeroByte(keyBytes);
+      }
       this.scan.setStartRow(keyBytes);
     }
 
     if (scanBuilder.getStopKey() != null) {
       byte[] keyBytes = entityMapper.getKeySerDe().serialize(
           scanBuilder.getStopKey());
+      if (scanBuilder.getStopInclusive()) {
+        keyBytes = addZeroByte(keyBytes);
+      }
       this.scan.setStopRow(keyBytes);
     }
 
@@ -119,7 +118,7 @@ public class BaseEntityScanner<E> implements EntityScanner<E> {
       this.scan = scanModifier.modifyScan(this.scan);
     }
   }
-
+  
   @Override
   public Iterator<E> iterator() {
     final Iterator<Result> iterator = resultScanner.iterator();
@@ -166,8 +165,6 @@ public class BaseEntityScanner<E> implements EntityScanner<E> {
     iterator = resultScanner.iterator();
   }
 
-
-
   @Override
   public void close() {
     resultScanner.close();
@@ -198,7 +195,6 @@ public class BaseEntityScanner<E> implements EntityScanner<E> {
     iterator.remove();
   }
 
-
   /**
    * Scanner builder for BaseEntityScanner
    * 
@@ -219,5 +215,12 @@ public class BaseEntityScanner<E> implements EntityScanner<E> {
       return scanner;
     }
 
+  }
+  
+  private byte[] addZeroByte(byte[] inBytes) {
+    byte[] outBytes = new byte[inBytes.length + 1];
+    System.arraycopy(inBytes, 0, outBytes, 0, inBytes.length);
+    outBytes[inBytes.length] = (byte)0;
+    return outBytes;
   }
 }

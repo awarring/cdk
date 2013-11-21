@@ -79,9 +79,4 @@ public class TestFileSystemView extends TestRangeViews {
   public void testLimitedWriter() {
     // range-limited writers are not currently implemented
   }
-
-  @Test(expected=UnsupportedOperationException.class)
-  public void testLimitedAccessor() {
-    testDataset.newAccessor();
-  }
 }

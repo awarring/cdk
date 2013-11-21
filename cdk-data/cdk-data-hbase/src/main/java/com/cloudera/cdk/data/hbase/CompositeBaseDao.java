@@ -15,7 +15,15 @@
  */
 package com.cloudera.cdk.data.hbase;
 
-import com.cloudera.cdk.data.Marker;
+import com.cloudera.cdk.data.PartitionKey;
+import com.cloudera.cdk.data.PartitionStrategy;
+import com.cloudera.cdk.data.dao.EntityBatch;
+import com.cloudera.cdk.data.dao.EntityScanner;
+import com.cloudera.cdk.data.dao.EntitySchema;
+import com.cloudera.cdk.data.dao.EntitySchema.FieldMapping;
+import com.cloudera.cdk.data.dao.HBaseCommonException;
+import com.cloudera.cdk.data.dao.KeySchema;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -26,21 +34,10 @@ import org.apache.hadoop.hbase.client.HTablePool;
 import org.apache.hadoop.hbase.client.Increment;
 import org.apache.hadoop.hbase.client.Result;
 
-import com.cloudera.cdk.data.PartitionKey;
-import com.cloudera.cdk.data.PartitionStrategy;
-import com.cloudera.cdk.data.dao.EntityBatch;
-import com.cloudera.cdk.data.dao.EntityScanner;
-import com.cloudera.cdk.data.dao.EntitySchema;
-import com.cloudera.cdk.data.dao.EntitySchema.FieldMapping;
-import com.cloudera.cdk.data.dao.HBaseCommonException;
-import com.cloudera.cdk.data.dao.KeySchema;
-
 /**
  * Base implementation of the CompositeDao interface. Internally managed
  * multiple EntityMappers that each handle their respective sub types.
  * 
- * @param <K>
- *          The type of the key
  * @param <E>
  *          The type of the entity this DAO returns. This entity will be a
  *          composition of the sub entities.
@@ -185,23 +182,8 @@ public abstract class CompositeBaseDao<E, S> implements CompositeDao<E, S> {
   }
 
   @Override
-  public E get(Marker key) {
-    return baseDao.get(key);
-  }
-
-  @Override
   public boolean put(E entity) {
     return baseDao.put(entity);
-  }
-
-  @Override
-  public long increment(Marker key, String fieldName, long amount) {
-    return baseDao.increment(key, fieldName, amount);
-  }
-
-  @Override
-  public void delete(Marker key) {
-    baseDao.delete(key);
   }
 
   @Override
@@ -228,6 +210,12 @@ public abstract class CompositeBaseDao<E, S> implements CompositeDao<E, S> {
   @Override
   public EntityScanner<E> getScanner(PartitionKey startKey, PartitionKey stopKey) {
     return baseDao.getScanner(startKey, stopKey);
+  }
+  
+  @Override
+  public EntityScanner<E> getScanner(PartitionKey startKey,
+      boolean startInclusive, PartitionKey stopKey, boolean stopInclusive) {
+    return baseDao.getScanner(startKey, startInclusive, stopKey, stopInclusive);
   }
 
   @Override
