@@ -16,36 +16,29 @@
 package com.cloudera.cdk.data.hbase.avro;
 
 import com.google.common.collect.Lists;
+
 import java.io.InputStream;
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-
 import java.util.Map;
+
 import org.apache.avro.Schema;
 import org.apache.avro.specific.SpecificRecord;
 import org.apache.hadoop.hbase.client.HTablePool;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.cloudera.cdk.data.dao.Dao;
-import com.cloudera.cdk.data.dao.HBaseCommonException;
-import com.cloudera.cdk.data.dao.SchemaManager;
-import com.cloudera.cdk.data.dao.SchemaNotFoundException;
-import com.cloudera.cdk.data.dao.SchemaValidationException;
-import com.cloudera.cdk.data.hbase.BaseDao;
-import com.cloudera.cdk.data.hbase.BaseEntityMapper;
-import com.cloudera.cdk.data.hbase.CompositeBaseDao;
-import com.cloudera.cdk.data.hbase.EntityMapper;
-import com.cloudera.cdk.data.hbase.avro.impl.AvroEntityComposer;
-import com.cloudera.cdk.data.hbase.avro.impl.AvroEntitySchema;
-import com.cloudera.cdk.data.hbase.avro.impl.AvroEntitySerDe;
-import com.cloudera.cdk.data.hbase.avro.impl.AvroKeyEntitySchemaParser;
-import com.cloudera.cdk.data.hbase.avro.impl.AvroKeySchema;
-import com.cloudera.cdk.data.hbase.avro.impl.AvroKeySerDe;
-import com.cloudera.cdk.data.hbase.avro.impl.AvroUtils;
-import com.cloudera.cdk.data.hbase.avro.impl.VersionedAvroEntityMapper;
+import com.cloudera.cdk.data.hbase.impl.BaseDao;
+import com.cloudera.cdk.data.hbase.impl.BaseEntityMapper;
+import com.cloudera.cdk.data.hbase.impl.CompositeBaseDao;
+import com.cloudera.cdk.data.hbase.impl.Dao;
+import com.cloudera.cdk.data.hbase.impl.EntityMapper;
+import com.cloudera.cdk.data.hbase.impl.HBaseCommonException;
+import com.cloudera.cdk.data.hbase.impl.SchemaManager;
+import com.cloudera.cdk.data.hbase.impl.SchemaNotFoundException;
+import com.cloudera.cdk.data.hbase.impl.SchemaValidationException;
 
 /**
  * A Dao for Avro's SpecificRecords. In this Dao implementation, both the

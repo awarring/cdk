@@ -15,9 +15,7 @@
  */
 package com.cloudera.cdk.data.hbase.avro;
 
-import com.cloudera.cdk.data.dao.SchemaValidationException;
-import com.cloudera.cdk.data.hbase.avro.impl.AvroKeyEntitySchemaParser;
-import com.cloudera.cdk.data.hbase.avro.impl.AvroUtils;
+import com.cloudera.cdk.data.hbase.impl.SchemaValidationException;
 
 import org.junit.Test;
 

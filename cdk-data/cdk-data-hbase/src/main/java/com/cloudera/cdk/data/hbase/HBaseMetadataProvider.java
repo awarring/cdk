@@ -19,16 +19,18 @@ import com.cloudera.cdk.data.DatasetDescriptor;
 import com.cloudera.cdk.data.MetadataProviderException;
 import com.cloudera.cdk.data.NoSuchDatasetException;
 import com.cloudera.cdk.data.PartitionStrategy;
-import com.cloudera.cdk.data.dao.Constants;
-import com.cloudera.cdk.data.dao.EntitySchema;
-import com.cloudera.cdk.data.dao.HBaseCommonException;
-import com.cloudera.cdk.data.dao.SchemaManager;
-import com.cloudera.cdk.data.hbase.avro.impl.AvroEntitySchema;
-import com.cloudera.cdk.data.hbase.avro.impl.AvroKeyEntitySchemaParser;
+import com.cloudera.cdk.data.hbase.avro.AvroEntitySchema;
+import com.cloudera.cdk.data.hbase.avro.AvroKeyEntitySchemaParser;
+import com.cloudera.cdk.data.hbase.impl.Constants;
+import com.cloudera.cdk.data.hbase.impl.EntitySchema;
+import com.cloudera.cdk.data.hbase.impl.HBaseCommonException;
+import com.cloudera.cdk.data.hbase.impl.SchemaManager;
 import com.cloudera.cdk.data.spi.AbstractMetadataProvider;
+
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Set;
+
 import org.apache.hadoop.hbase.HColumnDescriptor;
 import org.apache.hadoop.hbase.HTableDescriptor;
 import org.apache.hadoop.hbase.client.HBaseAdmin;

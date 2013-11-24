@@ -49,15 +49,15 @@ import org.codehaus.jackson.map.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.cloudera.cdk.data.dao.Constants;
-import com.cloudera.cdk.data.dao.HBaseCommonException;
-import com.cloudera.cdk.data.dao.KeySchema;
-import com.cloudera.cdk.data.dao.SchemaManager;
-import com.cloudera.cdk.data.dao.SchemaValidationException;
-import com.cloudera.cdk.data.hbase.avro.impl.AvroEntitySchema;
-import com.cloudera.cdk.data.hbase.avro.impl.AvroKeyEntitySchemaParser;
-import com.cloudera.cdk.data.hbase.avro.impl.AvroKeySchema;
-import com.cloudera.cdk.data.hbase.avro.impl.AvroUtils;
+import com.cloudera.cdk.data.hbase.avro.AvroEntitySchema;
+import com.cloudera.cdk.data.hbase.avro.AvroKeyEntitySchemaParser;
+import com.cloudera.cdk.data.hbase.avro.AvroKeySchema;
+import com.cloudera.cdk.data.hbase.avro.AvroUtils;
+import com.cloudera.cdk.data.hbase.impl.Constants;
+import com.cloudera.cdk.data.hbase.impl.HBaseCommonException;
+import com.cloudera.cdk.data.hbase.impl.KeySchema;
+import com.cloudera.cdk.data.hbase.impl.SchemaManager;
+import com.cloudera.cdk.data.hbase.impl.SchemaValidationException;
 
 /**
  * Utility class for managing Managed Schemas in HBase Common.

@@ -16,16 +16,15 @@
 package com.cloudera.cdk.data.hbase.avro;
 
 import com.cloudera.cdk.data.PartitionKey;
-import com.cloudera.cdk.data.dao.Dao;
-import com.cloudera.cdk.data.dao.EntityBatch;
-import com.cloudera.cdk.data.dao.EntityScanner;
-import com.cloudera.cdk.data.dao.HBaseCommonException;
 import com.cloudera.cdk.data.hbase.avro.entities.ArrayRecord;
 import com.cloudera.cdk.data.hbase.avro.entities.EmbeddedRecord;
 import com.cloudera.cdk.data.hbase.avro.entities.TestEnum;
 import com.cloudera.cdk.data.hbase.avro.entities.TestIncrement;
 import com.cloudera.cdk.data.hbase.avro.entities.TestRecord;
-import com.cloudera.cdk.data.hbase.avro.impl.AvroUtils;
+import com.cloudera.cdk.data.hbase.impl.Dao;
+import com.cloudera.cdk.data.hbase.impl.EntityBatch;
+import com.cloudera.cdk.data.hbase.impl.EntityScanner;
+import com.cloudera.cdk.data.hbase.impl.HBaseCommonException;
 import com.cloudera.cdk.data.hbase.testing.HBaseTestUtils;
 
 import java.util.ArrayList;

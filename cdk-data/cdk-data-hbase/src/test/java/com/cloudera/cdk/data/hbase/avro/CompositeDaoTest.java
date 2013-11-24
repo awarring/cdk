@@ -33,12 +33,11 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import com.cloudera.cdk.data.PartitionKey;
-import com.cloudera.cdk.data.dao.Dao;
-import com.cloudera.cdk.data.dao.HBaseCommonException;
 import com.cloudera.cdk.data.hbase.avro.entities.CompositeRecord;
 import com.cloudera.cdk.data.hbase.avro.entities.SubRecord1;
 import com.cloudera.cdk.data.hbase.avro.entities.SubRecord2;
-import com.cloudera.cdk.data.hbase.avro.impl.AvroUtils;
+import com.cloudera.cdk.data.hbase.impl.Dao;
+import com.cloudera.cdk.data.hbase.impl.HBaseCommonException;
 import com.cloudera.cdk.data.hbase.testing.HBaseTestUtils;
 
 public class CompositeDaoTest {

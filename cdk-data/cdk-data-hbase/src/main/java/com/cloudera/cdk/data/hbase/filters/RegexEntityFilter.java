@@ -19,11 +19,11 @@ import org.apache.hadoop.hbase.filter.CompareFilter;
 import org.apache.hadoop.hbase.filter.Filter;
 import org.apache.hadoop.hbase.filter.RegexStringComparator;
 
-import com.cloudera.cdk.data.dao.EntitySchema;
-import com.cloudera.cdk.data.dao.EntitySchema.FieldMapping;
-import com.cloudera.cdk.data.hbase.EntitySerDe;
-import com.cloudera.cdk.data.dao.HBaseCommonException;
-import com.cloudera.cdk.data.dao.MappingType;
+import com.cloudera.cdk.data.hbase.impl.EntitySchema;
+import com.cloudera.cdk.data.hbase.impl.EntitySerDe;
+import com.cloudera.cdk.data.hbase.impl.HBaseCommonException;
+import com.cloudera.cdk.data.hbase.impl.MappingType;
+import com.cloudera.cdk.data.hbase.impl.EntitySchema.FieldMapping;
 
 /**
  * An EntityFilter that will perform a regular expression filter on an entity's
